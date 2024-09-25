@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>IRob</name>
+  <name>IRob-main</name>
   <version>0.0.1</version>
   <description>Datasets to be used with turtlebot3 waffle pi</description>
 
