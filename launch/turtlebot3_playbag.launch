@@ -9,15 +9,32 @@
   </include>
 
   <!-- Map server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="$(find IRob)/data/map.yaml" />
 
   <!-- TF -->
-  
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_odom" args="0 0.01 0 0 0 0 map odom" />
+
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
-          args="--clock $(find turtlebot3_datasets)/data/$(arg bag_name).bag"/>
+          args="--clock $(find IRob)/data/$(arg bag_name).bag"/>
 
   <!-- EKF robot localisation -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_filter_node" output="screen">
+    <param name="odom0" value="/odom"/>
+    <param name="imu0" value="/imu/data"/>
+    <param name="use_control" value="false"/>
+    <param name="frequency" value="30"/>
+    <param name="odom0_config" value="[true, true, false,  
+                                       false, false, false, 
+                                       false, false, false, 
+                                       false, false, false]"/>
+
+    <param name="imu0_config" value="[false, false, true, 
+                                      false, false, true,   
+                                      true, true, true,   
+                                      false, false, false]"/>
+  </node>
 
   <!-- AMCL-->
 

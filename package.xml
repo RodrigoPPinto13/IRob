@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>turtlebot3_datasets</name>
+  <name>IRob</name>
   <version>0.0.1</version>
   <description>Datasets to be used with turtlebot3 waffle pi</description>
 
@@ -51,7 +51,9 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
