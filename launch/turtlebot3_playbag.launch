@@ -10,14 +10,15 @@
 
   <!-- Map server -->
   <node pkg="map_server" type="map_server" name="map_server" args="$(find IRob-main)/data/map.yaml" />
+  
   <!-- TF -->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_odom" args="0 0.01 0 0 0 0 map odom" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_odom" args="0 0.01 0 0 0 0 map odom" />
 
 
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
-          args="--clock $(find IRob-main)/data/$(arg bag_name).bag"/>
+    args="--clock $(find IRob-main)/data/$(arg bag_name).bag"/>
 
   <!-- EKF robot localisation -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node">
@@ -26,18 +27,13 @@
   <!-- AMCL-->
 
   <!-- Groundtruth path -->
-<!--<node pkg="tf2_ros" type="static_transform_publisher" name="groundtruth_tf" args="0 0 0 0 0 0 map base_link" /> -->
-
-<!-- Throttling the transform to simulate ground-truth path at 1Hz 
-<node pkg="robot_localization" type="navsat_transform_node" name="groundtruth_throttle" output="screen">
-  <param name="frequency" value="1.0"/>
-</node>       -->
+  <!--  <node pkg="IRob-main" type="ground_truth.py" name="ground_truth_downsampler" output="screen" /> -->
 
   <!-- Estimated path -->
 
   <!-- Position error publisher -->
 
   <!-- rviz -->
-  <node pkg="rviz" type="rviz" name="rviz" required="true"/>
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find IRob-main)/exercise1.rviz"/>
 
 </launch>
