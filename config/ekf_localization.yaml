@@ -13,7 +13,7 @@ imu0_differential: false
 imu0_queue_size: 20 
 imu0_remove_gravitational_acceleration: true
 
-world_frame: map
+world_frame: mocap
 base_link_frame: base_link
 odom_frame: odom
 publish_tf: true
