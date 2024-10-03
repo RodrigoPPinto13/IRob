@@ -1,27 +1,39 @@
 #!/usr/bin/env python
 
 import rospy
-from nav_msgs.msg import Odometry  # Adjust to the correct message type if needed
-import rosbag
+import tf
+import numpy as np
+from geometry_msgs.msg import Transform
 
-class GroundTruthDownsampler:
-    def __init__(self, bag_file, output_topic):
-        self.output_topic = output_topic
-        self.pub = rospy.Publisher(self.output_topic, Odometry, queue_size=10)
-        self.rate = rospy.Rate(1)  # 1 Hz
+# Callback to log differences
+def compute_transform_difference(event):
+    try:
+        # Lookup transformation mocap -> mocap_laser_link
+        (trans_laser, rot_laser) = listener.lookupTransform('/mocap', '/mocap_laser_link', rospy.Time(0))
 
-        with rosbag.Bag(bag_file, 'r') as bag:
-            for topic, msg, t in bag.read_messages():
-                if topic == '/mocap':  # Adjust to your actual ground truth topic
-                    self.pub.publish(msg)
-                    self.rate.sleep()  # Sleep to maintain 1 Hz
+        # Lookup transformation mocap -> base_footprint
+        (trans_base, rot_base) = listener.lookupTransform('/mocap', '/base_footprint', rospy.Time(0))
 
-def main():
-    rospy.init_node('ground_truth_downsampler', anonymous=True)
-    bag_file = rospy.get_param('~bag_file', 'catkin_ws/src/IRob-main/data/fixed_slam_easy.bag')  # Specify bag file path
-    output_topic = '/ground_truth_downsampled'
-    GroundTruthDownsampler(bag_file, output_topic)
-    rospy.spin()
+        # Calculate the difference in translation (Euclidean distance)
+        trans_diff = np.linalg.norm(np.array(trans_laser) - np.array(trans_base))
+
+        # Convert rotations (quaternions) to Euler angles and compute the angular difference
+        rot_laser_euler = tf.transformations.euler_from_quaternion(rot_laser)
+        rot_base_euler = tf.transformations.euler_from_quaternion(rot_base)
+        rot_diff = np.linalg.norm(np.array(rot_laser_euler) - np.array(rot_base_euler))
+
+        # Log or publish the difference
+        rospy.loginfo("Translation Difference: {:.4f} meters, Rotation Difference: {:.4f} radians".format(trans_diff, rot_diff))
+
+    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        rospy.logwarn("Transform not available at this time")
 
 if __name__ == '__main__':
-    main()
+    rospy.init_node('transform_difference_calculator')
+
+    listener = tf.TransformListener()
+
+    # Call the function at 1 Hz
+    rospy.Timer(rospy.Duration(1.0), compute_transform_difference)
+
+    rospy.spin()
