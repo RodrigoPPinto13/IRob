@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   robot_localization
   rosbag
   rviz
+  amcl
 )
 
 
