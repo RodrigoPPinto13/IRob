@@ -1,19 +1,21 @@
 <launch>
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
-  <arg name="bag_name" default="2024-09-23-11-45-14"/>
+  <arg name="bag_name" default="bruh_modified"/>
 
   <!-- Turtlebot3 -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
     <arg name="model" value="$(arg model)" />
   </include>
 
-  <!-- Map server -->
+  <!-- Map server 
+  -->
   <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/my_map.yaml" />
 
 <!--
   <node pkg="tf2_ros" type="static_transform_publisher" name="tf2_mocap_to_map" required="true" args="0.935 1.34 -0.023 1.657 0 0 mocap map" />
 -->
+  
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
     args="--clock $(find irob-main)/bag/$(arg bag_name).bag"/>
@@ -48,11 +50,12 @@
   <node pkg="irob-main" type="ground_truth.py" name="ground_truth" output="screen"/>
 -->
 
-  <!-- AMCL -->
-  <node pkg="amcl" type="amcl"  name="amcl" output="screen">
+  <!-- AMCL 
+  -->
+<node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="use_map_topic" value="true"/>
     <param name="base_frame_id" value="base_footprint"/>
-    <param name="odom_frame_id" value="odom"/>
+    <param name="odom_frame_id" value="odom"/> 
     <param name="scan_topic" value="/scan"/>
     <param name="min_particles" value="500"/>
     <param name="max_particles" value="2000"/>
@@ -64,7 +67,8 @@
     <param name="initial_pose_y" value="0.0"/>
     <param name="initial_pose_a" value="0.0"/>
     <param name="laser_likelihood_max_dist" value="2.0"/>
-  </node>
+</node>
+
   
 
   <!-- RViz args="-d $(find irob-main)/exercise1.rviz"-->
