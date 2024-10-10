@@ -8,6 +8,12 @@
     <arg name="model" value="$(arg model)" />
   </include>
 
+  <launch>
+    <node pkg="costmap_2d" type="costmap_2d_node" name="global_costmap" output="screen">
+      <rosparam command="load" file="irob-main/config/costmap_params.yaml"/>
+    </node>
+  </launch>
+
   <!-- Map server 
   -->
   <node pkg="map_server" type="map_server" name="map_server" args="/home/introrobotica/catkin_ws/src/irob-main/data/group16.yaml" />
@@ -74,6 +80,14 @@
     <param name="initial_pose_a" value="1"/>
     <param name="laser_likelihood_max_dist" value="2.0"/>
   </node>
+
+<!-- RRT Planner -->
+<node pkg="rrt_planner" type="rrt_planner_node" name="rrt_planner" output="screen">
+  <param name="global_frame" value="map"/>
+  <param name="costmap_topic" value="/config/costmap_params"/>
+  <param name="robot_base_frame" value="base_footprint"/>
+  <!-- Add any additional parameters your planner requires -->
+</node>
 
     <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
   -->
