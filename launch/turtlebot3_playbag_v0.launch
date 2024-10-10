@@ -8,15 +8,9 @@
     <arg name="model" value="$(arg model)" />
   </include>
 
-  <launch>
-    <node pkg="costmap_2d" type="costmap_2d_node" name="global_costmap" output="screen">
-      <rosparam command="load" file="irob-main/config/costmap_params.yaml"/>
-    </node>
-  </launch>
-
   <!-- Map server 
   -->
-  <node pkg="map_server" type="map_server" name="map_server" args="/home/introrobotica/catkin_ws/src/irob-main/data/group16.yaml" />
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/tiago/catkin_ws/src/irob-main/data/group16.yaml" />
 
 <!--
   <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 1 0 0 map odom 100" />
@@ -81,16 +75,22 @@
     <param name="laser_likelihood_max_dist" value="2.0"/>
   </node>
 
-<!-- RRT Planner -->
-<node pkg="rrt_planner" type="rrt_planner_node" name="rrt_planner" output="screen">
-  <param name="global_frame" value="map"/>
-  <param name="costmap_topic" value="/config/costmap_params"/>
-  <param name="robot_base_frame" value="base_footprint"/>
-  <!-- Add any additional parameters your planner requires -->
-</node>
-
     <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
   -->
+
+    <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <param name="base_global_planner" value="rrt_planner/RRTPlannerROS"/>
+    <rosparam file="$(find rrt_planner)/config/rrt_planner.yaml" command="load"/>
+
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+  </node>
 
   
 
