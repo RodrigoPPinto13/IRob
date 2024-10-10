@@ -83,7 +83,7 @@ class EKFErrorComputation2D:
         plt.tight_layout()
 
         # Save the plot to a file
-        plt.savefig('/home/alexandre/error.png')
+        plt.savefig('/home/introrobotica/error.png')
 
         # Show the plot
         plt.show()

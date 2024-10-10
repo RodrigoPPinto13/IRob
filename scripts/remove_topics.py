@@ -1,8 +1,8 @@
 import rosbag
 
 # Input and output bag file paths
-input_bag_path = '/home/alexandre/catkin_ws/src/irob-main/bag/bruh.bag'
-output_bag_path = '/home/alexandre/catkin_ws/src/irob-main/bag/bruh_modified.bag'
+input_bag_path = '/home/introrobotica/catkin_ws/src/irob-main/bag/newbag.bag'
+output_bag_path = '/home/introrobotica/catkin_ws/src/irob-main/bag/newbag_modified.bag'
 
 x_init = 1.2173992395401
 y_init = -5.0

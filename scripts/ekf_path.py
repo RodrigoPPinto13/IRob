@@ -11,7 +11,7 @@ class OdometryPath:
 
         # Path message to store the accumulated poses
         self.ekf_path = Path()
-        self.ekf_path.header.frame_id = "odom"  # Set the frame ID (usually "odom" or "map")
+        self.ekf_path.header.frame_id = "map"  # Set the frame ID (usually "odom" or "map")
 
         # Subscribe to the /odometry/filtered topic
         self.odom_sub = rospy.Subscriber('/odometry/filtered', Odometry, self.odom_callback)
