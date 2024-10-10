@@ -1,7 +1,7 @@
 <launch>
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
-  <arg name="bag_name" default="bruh_modified"/>
+  <arg name="bag_name" default="fixed_slam_easy"/>
 
   <!-- Turtlebot3 -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
@@ -10,17 +10,18 @@
 
   <!-- Map server 
   -->
-  <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/my_map.yaml" />
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/map.yaml" />
 
 <!--
-  <node pkg="tf2_ros" type="static_transform_publisher" name="tf2_mocap_to_map" required="true" args="0.935 1.34 -0.023 1.657 0 0 mocap map" />
 -->
-  
+  <node pkg="tf2_ros" type="static_transform_publisher" name="tf2_mocap_to_map" required="true" args="0.935 1.34 -0.023 1.657 0 0 mocap map" />
+
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
-    args="--clock $(find irob-main)/bag/$(arg bag_name).bag"/>
+    args="--clock $(find irob-main)/data/$(arg bag_name).bag"/>
 
   <!-- EKF Robot Localization
+-->
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node">
     <param name="frequency" value="10." />
     <param name="sensor_timeout" value="0.5" />
@@ -45,13 +46,11 @@
        false, false, false]</rosparam>
     <param name="imu0_relative" value="true" />
   </node> 
--->
   <!-- ground truth
-  <node pkg="irob-main" type="ground_truth.py" name="ground_truth" output="screen"/>
 -->
+  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
 
   <!-- AMCL 
-  -->
 <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="use_map_topic" value="true"/>
     <param name="base_frame_id" value="base_footprint"/>
@@ -61,13 +60,16 @@
     <param name="max_particles" value="2000"/>
     <param name="laser_min_range" value="0.05"/>
     <param name="laser_max_range" value="12.0"/>
-    <param name="update_min_a" value="0.2"/>
-    <param name="update_min_d" value="0.25"/>
-    <param name="initial_pose_x" value="0.0"/>
-    <param name="initial_pose_y" value="0.0"/>
-    <param name="initial_pose_a" value="0.0"/>
+    <param name="update_min_a" value="0.1"/>
+    <param name="update_min_d" value="0.05"/>
+    <param name="initial_pose_x" value="1.0"/>
+    <param name="initial_pose_y" value="-5.0"/>
+    <param name="initial_pose_a" value="-1.57"/>
     <param name="laser_likelihood_max_dist" value="2.0"/>
 </node>
+
+  <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
+  -->
 
   
 
