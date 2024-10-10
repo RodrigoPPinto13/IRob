@@ -1,0 +1,31 @@
+# costmap_params.yaml
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_footprint
+  update_frequency: 3.0
+  publish_frequency: 3.0
+  width: 10.0         # in meters
+  height: 10.0        # in meters
+  resolution: 0.1    # in meters/pixel
+  static_map: true
+
+  plugins:
+    - { name: static_layer, type: "costmap_2d::StaticLayer" }
+    - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" }
+    - { name: inflation_layer, type: "costmap_2d::InflationLayer" }
+
+static_layer:
+  map_topic: /map
+
+obstacle_layer:
+  observation_sources: laser_scan
+  obstacle_range: 2.0
+  raytrace_range: 3.0
+  laser_scan:
+    data_type: LaserScan
+    topic: /scan
+    marking: true
+    clearing: true
+
+inflation_layer:
+  inflation_radius: 0.55
