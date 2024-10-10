@@ -1,7 +1,7 @@
 <launch>
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
-  <arg name="bag_name" default="bruh_modified"/>
+  <arg name="bag_name" default="bag"/>
 
   <!-- Turtlebot3 -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
@@ -10,17 +10,16 @@
 
   <!-- Map server 
   -->
-  <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/my_map.yaml" />
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/introrobotica/catkin_ws/src/irob-main/data/group16.yaml" />
 
 <!--
-  <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="1.0 -5.0 0 0 0 0 map odom 100" />
--->
+  <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 1 0 0 map odom 100" />
+--> 
 
 
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
     args="--clock $(find irob-main)/bag/$(arg bag_name).bag"/>
-
 
 
   <!-- EKF Robot Localization
@@ -35,45 +34,35 @@
     <param name="world_frame" value="map" />
     <param name="odom0" value="odom" />
     <rosparam param="odom0_config">
-      [true, true, false,
-       false, false, true,
+      [false, false, false,
+       false, false, false,
        true, true, false,
        false, false, true,
        false, false, false]</rosparam>
     <param name="imu0" value="imu" />
     <rosparam param="imu0_config">
       [false, false, false,
-       false, false, true,
+       false, false, false,
        false, false, false,
        false, false, true,
        false, false, false]</rosparam>
-    <rosparam param="odom0_pose_covariance">
-      [0.01, 0, 0, 0, 0, 0,
-       0, 0.01, 0, 0, 0, 0,
-       0, 0, 99999, 0, 0, 0,
-       0, 0, 0, 99999, 0, 0,
-       0, 0, 0, 0, 99999, 0,
-       0, 0, 0, 0, 0, 0.01]
-    </rosparam>
-    <rosparam param="odom0_twist_covariance">
-      [0.01, 0, 0, 0, 0, 0,
-       0, 0.01, 0, 0, 0, 0,
-       0, 0, 99999, 0, 0, 0,
-       0, 0, 0, 99999, 0, 0,
-       0, 0, 0, 0, 99999, 0,
-       0, 0, 0, 0, 0, 0.01]
-    </rosparam>
-    <param name="imu0_relative" value="true" />
+    <param name="imu0_relative" value="false" />
+<rosparam param="initial_state">[0.0,  0.0,  0.0,
+                                 0.0,  0.0,  1.0,
+                                 0.0,  0.0,  0.0,
+                                 0.0,  0.0,  0.0,
+                                 0.0,  0.0,  0.0]</rosparam>
   </node> 
 
+  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
   <!-- ground truth
 -->
-  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
 
   <!-- AMCL 
+
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="use_map_topic" value="true"/>
-    <param name="base_frame_id" value="base_footprint"/>
+    <param name="base_frame_id" value="base_link"/>
     <param name="odom_frame_id" value="odom"/> 
     <param name="scan_topic" value="/scan"/>
     <param name="min_particles" value="500"/>
@@ -82,13 +71,11 @@
     <param name="laser_max_range" value="12.0"/>
     <param name="update_min_a" value="0.1"/>
     <param name="update_min_d" value="0.05"/>
-    <param name="initial_pose_x" value="1.0"/>
-    <param name="initial_pose_y" value="-5.0"/>
-    <param name="initial_pose_a" value="-1.57"/>
+    <param name="initial_pose_a" value="1"/>
     <param name="laser_likelihood_max_dist" value="2.0"/>
   </node>
 
-  <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
+    <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
   -->
 
   

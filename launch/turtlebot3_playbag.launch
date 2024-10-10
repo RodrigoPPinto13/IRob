@@ -10,7 +10,7 @@
 
   <!-- Map server 
   -->
-  <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/map.yaml" />
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/introrobotica/catkin_ws/src/irob-main/data/map.yaml" />
 
 <!--
 -->
@@ -45,6 +45,7 @@
        false, false, false,
        false, false, false]</rosparam>
     <param name="imu0_relative" value="true" />
+
   </node> 
   <!-- ground truth
 -->
