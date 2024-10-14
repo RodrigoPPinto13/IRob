@@ -1,0 +1,25 @@
+<sdf version="1.6">
+  <world name="default">
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <heightmap>
+              <uri>file:///home/alexandre/catkin_ws/src/irob-main/data/group16.png</uri>
+              <size>50 50 5</size> <!-- Adjust based on the size of your map -->
+              <pos>0 0 0</pos> <!-- Adjust the position -->
+            </heightmap>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <heightmap>
+              <uri>file:///home/alexandre/catkin_ws/src/irob-main/data/group16.png</uri>
+            </heightmap>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>
