@@ -8,22 +8,20 @@
     <arg name="model" value="$(arg model)" />
   </include>
 
-  <!-- Map server 
-  -->
-  <node pkg="map_server" type="map_server" name="map_server" args="/home/tiago/catkin_ws/src/irob-main/data/group16.yaml" />
+  <!-- Map server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/alexandre/catkin_ws/src/irob-main/data/group16.yaml" />
 
 <!--
   <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 1 0 0 map odom 100" />
---> 
 
 
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
-    args="--clock $(find irob-main)/bag/$(arg bag_name).bag"/>
+    args="clock $(find irob-main)/bag/$(arg bag_name).bag"/>
 
+--> 
 
   <!-- EKF Robot Localization
--->
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node">
     <param name="frequency" value="10." />
     <param name="sensor_timeout" value="0.5" />
@@ -54,11 +52,11 @@
                                  0.0,  0.0,  0.0]</rosparam>
   </node> 
 
-  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
+-->
   <!-- ground truth
+  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
 -->
 
-  <!-- AMCL 
 
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="use_map_topic" value="true"/>
@@ -75,8 +73,18 @@
     <param name="laser_likelihood_max_dist" value="2.0"/>
   </node>
 
+  <!-- AMCL 
     <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
   -->
+
+<!-- RRT Planner
+  <node pkg="rrt_planner" type="rrt_planner_node" name="rrt_planner" output="screen">
+    <param name="global_frame" value="map"/>
+    <param name="costmap_topic" value="/config/costmap_params"/>
+    <param name="robot_base_frame" value="base_footprint"/>
+  </node>
+ -->
+
 
     <!-- move_base -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

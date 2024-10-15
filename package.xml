@@ -60,7 +60,11 @@
 <build_depend>rosbag</build_depend>
 <build_depend>rviz</build_depend>
 <build_depend>amcl</build_depend>
-
+  <build_depend>costmap_2d</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>nav_core</build_depend>
+  <build_depend>pluginlib</build_depend>
 
 <exec_depend>roscpp</exec_depend>
 <exec_depend>sensor_msgs</exec_depend>
@@ -71,6 +75,13 @@
 <exec_depend>rosbag</exec_depend>
 <exec_depend>rviz</exec_depend>
 <exec_depend>amcl</exec_depend>
+  <exec_depend>costmap_2d</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>nav_core</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+
+
 
 
   <!-- The export tag contains other, unspecified, tags -->
