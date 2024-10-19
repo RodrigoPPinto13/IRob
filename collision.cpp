@@ -22,8 +22,8 @@ namespace rrt_planner {
         }
 
         unsigned char cost = costmap_->getCost(cell_x, cell_y);
-        ROS_INFO("cost %d", cost);
-        if (cost == costmap_2d::FREE_SPACE) {
+
+        if (cost <= 127) {
             return true;
         } else {
             return false;

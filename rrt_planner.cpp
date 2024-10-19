@@ -12,13 +12,12 @@ namespace rrt_planner {
         map_width_  = costmap_->getSizeInMetersX();
         map_height_ = costmap_->getSizeInMetersY();
 
-        random_double_x.setRange(0.0, map_width_);
-        random_double_y.setRange(0.0, map_height_);
+        random_double_x.setRange(-map_width_, map_width_);
+        random_double_y.setRange(-map_height_, map_height_);
 
         nodes_.reserve(params_.max_num_nodes);
     }
 
-    // Plan path function (already given)
     bool RRTPlanner::planPath() {
 
         // clear everything before planning
@@ -35,7 +34,6 @@ namespace rrt_planner {
             p_rand = sampleRandomPoint();
             nearest_node = nodes_[getNearestNodeId(p_rand)];
             p_new = extendTree(nearest_node.pos, p_rand); // new point and node candidate
-
             if (!collision_dect_.obstacleBetween(nearest_node.pos, p_new)) {
                 createNewNode(p_new, nearest_node.node_id);
             } else {
@@ -52,7 +50,6 @@ namespace rrt_planner {
         return false;
     }
 
-    // Find the nearest node to the random point
     int RRTPlanner::getNearestNodeId(const double *point) {
         double min_dist = std::numeric_limits<double>::max();
         int nearest_node_id = -1;
@@ -64,11 +61,9 @@ namespace rrt_planner {
                 nearest_node_id = i;
             }
         }
-
         return nearest_node_id;
     }
 
-    // Create a new node in the tree
     void RRTPlanner::createNewNode(const double* pos, int parent_node_id) {
         Node new_node;
         new_node.pos[0] = pos[0];
@@ -76,17 +71,15 @@ namespace rrt_planner {
         new_node.node_id = nodes_.size();  // Assign unique ID
         new_node.parent_id = parent_node_id;
         nodes_.emplace_back(new_node);  // Add the new node to the list
+
     }
 
-    // Generate a random point in the map
     double* RRTPlanner::sampleRandomPoint() {
         rand_point_[0] = random_double_x.generate();
         rand_point_[1] = random_double_y.generate();
-
         return rand_point_;
     }
 
-    // Extend the tree by generating a new point towards the random sample
     double* RRTPlanner::extendTree(const double* point_nearest, const double* point_rand) {
         double direction[2];
         double dist = computeDistance(point_nearest, point_rand);
@@ -98,11 +91,9 @@ namespace rrt_planner {
         // Compute the new candidate point along the direction, with a fixed step size
         candidate_point_[0] = point_nearest[0] + params_.step * direction[0];
         candidate_point_[1] = point_nearest[1] + params_.step * direction[1];
-
         return candidate_point_;
     }
 
-    // Other functions to set start and goal positions
     void RRTPlanner::setStart(double *start) {
         start_[0] = start[0];
         start_[1] = start[1];
@@ -113,7 +104,6 @@ namespace rrt_planner {
         goal_[1] = goal[1];
     }
 
-    // Return the tree of nodes
     const std::vector<Node>& RRTPlanner::getTree() {
         return nodes_;
     }
