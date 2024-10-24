@@ -1,0 +1,107 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="waffle_pi"/>
+  <arg name="bag_name" default="bag"/>
+
+  <!-- Turtlebot3 -->
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <!-- Map server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="/home/introrobotica/catkin_ws/src/irob-main/data/group16.yaml" />
+
+<!--
+  <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 1 0 0 map odom 100" />
+
+
+  <param name="/use_sim_time" value="true"/>
+  <node pkg="rosbag" type="play" name="rosbag_player" 
+    args="clock $(find irob-main)/bag/$(arg bag_name).bag"/>
+
+--> 
+
+  <!-- EKF Robot Localization
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node">
+    <param name="frequency" value="10." />
+    <param name="sensor_timeout" value="0.5" />
+    <param name="two_d_mode" value="true" />
+    <param name="publish_tf" value="true" />
+    <param name="odom_frame" value="odom" />
+    <param name="base_link_frame" value="base_link" />
+    <param name="world_frame" value="map" />
+    <param name="odom0" value="odom" />
+    <rosparam param="odom0_config">
+      [false, false, false,
+       false, false, false,
+       true, true, false,
+       false, false, true,
+       false, false, false]</rosparam>
+    <param name="imu0" value="imu" />
+    <rosparam param="imu0_config">
+      [false, false, false,
+       false, false, false,
+       false, false, false,
+       false, false, true,
+       false, false, false]</rosparam>
+    <param name="imu0_relative" value="false" />
+<rosparam param="initial_state">[0.0,  0.0,  0.0,
+                                 0.0,  0.0,  1.0,
+                                 0.0,  0.0,  0.0,
+                                 0.0,  0.0,  0.0,
+                                 0.0,  0.0,  0.0]</rosparam>
+  </node> 
+
+-->
+  <!-- ground truth
+  <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
+-->
+
+
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <param name="use_map_topic" value="true"/>
+    <param name="base_frame_id" value="base_link"/>
+    <param name="odom_frame_id" value="odom"/> 
+    <param name="scan_topic" value="/scan"/>
+    <param name="min_particles" value="500"/>
+    <param name="max_particles" value="2000"/>
+    <param name="laser_min_range" value="0.05"/>
+    <param name="laser_max_range" value="12.0"/>
+    <param name="update_min_a" value="0.1"/>
+    <param name="update_min_d" value="0.05"/>
+    <param name="initial_pose_a" value="1"/>
+    <param name="laser_likelihood_max_dist" value="2.0"/>
+  </node>
+
+  <!-- AMCL 
+    <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
+  -->
+
+<!-- RRT Planner
+  <node pkg="rrt_planner" type="rrt_planner_node" name="rrt_planner" output="screen">
+    <param name="global_frame" value="map"/>
+    <param name="costmap_topic" value="/config/costmap_params"/>
+    <param name="robot_base_frame" value="base_footprint"/>
+  </node>
+ -->
+
+
+    <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <param name="base_global_planner" value="rrt_planner/RRTPlannerROS"/>
+    <rosparam file="$(find rrt_planner)/config/rrt_planner.yaml" command="load"/>
+
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+  </node>
+
+  
+
+  <!-- RViz args="-d $(find irob-main)/exercise1.rviz"-->
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find irob-main)/exercise1.rviz"/>
+</launch>
