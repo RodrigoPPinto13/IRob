@@ -24,17 +24,11 @@ distance_traveled = 0.0
 
 # Goals to be sent
 goals = [
-    (0.1, 1.4),
+    (-0.01, 1.98),
     (2.44, 0.4),
-    (-0.14, -3.88),
+    (0.631, -4.34),
     (0.80, -1.75),
 ]
-
-# Callback for goal sent
-def goal_callback(goal_msg):
-    global start_time
-    rospy.loginfo("Goal sent, recording start time.")
-    start_time = time.time()
 
 # Callback for result to determine success or failure
 def result_callback(result_msg):
@@ -104,7 +98,7 @@ def plot_results():
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig("move_base_original.png")
+    plt.savefig("move_base_5.png")
     plt.show()
 
 # Function to save data to CSV
@@ -117,15 +111,16 @@ def save_data_to_csv(filename):
             writer.writerow([i + 1, path_lengths[i], times_to_goal[i] if i < len(times_to_goal) else 'N/A'])
 
 def main():
-    global last_position, distance_traveled, path_lengths, goal_reached
+    global last_position, distance_traveled, path_lengths, goal_reached, start_time
 
     rospy.init_node('move_base_performance_monitor', anonymous=True)
-
     # Subscribers
     rospy.Subscriber('/move_base/result', MoveBaseActionResult, result_callback)
     rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, amcl_callback)
 
     rate = rospy.Rate(1)  # Run at 1 Hz
+    
+    start_time = time.time()
 
     for goal_pos in goals:
         # Send the goal and monitor performance
@@ -137,7 +132,6 @@ def main():
 
         # Monitor until goal is reached, failed, or timeout occurs
         while not rospy.is_shutdown():
-            elapsed_time = time.time() - goal_sent_time
 
             # Check if goal was reached
             if goal_reached:
@@ -145,13 +139,7 @@ def main():
                 rospy.loginfo(f"Path length for this goal: {distance_traveled}")
                 break
 
-            # Check if timeout occurred
-            if elapsed_time >= goal_timeout:
-                rospy.logwarn(f"Goal at {goal_pos} timed out after {goal_timeout} seconds.")
-                times_to_goal.append(goal_timeout)
-                path_lengths.append(distance_traveled)
-                break
-
+            # Check if timeout occurr
             rate.sleep()
 
     # Plot results after all trials are done
