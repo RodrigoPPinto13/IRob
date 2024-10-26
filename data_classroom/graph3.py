@@ -1,11 +1,11 @@
 import pandas as pd
 
 # Load the CSV files
-file_1 = 'path_to_file/move_base_performance_1.csv'
-file_2 = 'path_to_file/move_base_performance_2.csv'
-file_3 = 'path_to_file/move_base_performance_3.csv'
-file_4 = 'path_to_file/move_base_performance_4.csv'
-file_5 = 'path_to_file/move_base_performance_5.csv'
+file_1 = 'move_base_performance_1.csv'
+file_2 = 'move_base_performance_2.csv'
+file_3 = 'move_base_performance_3.csv'
+file_4 = 'move_base_performance_4.csv'
+file_5 = 'move_base_performance_5.csv'
 
 # Read the CSV files
 data_1 = pd.read_csv(file_1)
