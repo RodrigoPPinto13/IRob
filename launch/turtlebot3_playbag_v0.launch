@@ -22,6 +22,8 @@
 --> 
 
   <!-- EKF Robot Localization
+
+-->
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node">
     <param name="frequency" value="10." />
     <param name="sensor_timeout" value="0.5" />
@@ -52,7 +54,6 @@
                                  0.0,  0.0,  0.0]</rosparam>
   </node> 
 
--->
   <!-- ground truth
   <node pkg="irob-main" type="ekf_path.py" name="ekf_path" output="screen"/>
 -->
