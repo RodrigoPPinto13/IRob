@@ -59,6 +59,7 @@
 -->
 
   <!-- AMCL 
+  -->
 
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="use_map_topic" value="true"/>
@@ -76,8 +77,6 @@
   </node>
 
     <node pkg="irob-main" type="mcl_path.py" name="amcl_path" output="screen" />
-  -->
-
   
 
   <!-- RViz args="-d $(find irob-main)/exercise1.rviz"-->
