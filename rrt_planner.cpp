@@ -7,30 +7,20 @@ namespace rrt_planner {
     // Constructor
     RRTPlanner::RRTPlanner(costmap_2d::Costmap2DROS *costmap, 
             const rrt_params& params) : params_(params), collision_dect_(costmap) {
-
         costmap_ = costmap->getCostmap();
         map_width_  = costmap_->getSizeInMetersX();
         map_height_ = costmap_->getSizeInMetersY();
-
         random_double_x.setRange(-map_width_, map_width_);
         random_double_y.setRange(-map_height_, map_height_);
-
         nodes_.reserve(params_.max_num_nodes);
     }
 
     bool RRTPlanner::planPath() {
-
-        // clear everything before planning
         nodes_.clear();
-
-        // Start Node
         createNewNode(start_, -1);
-
         double *p_rand, *p_new;
         Node nearest_node;
-
         for (unsigned int k = 1; k <= params_.max_num_nodes; k++) {
-
             p_rand = sampleRandomPoint();
             nearest_node = nodes_[getNearestNodeId(p_rand)];
             p_new = extendTree(nearest_node.pos, p_rand); // new point and node candidate
@@ -39,21 +29,14 @@ namespace rrt_planner {
             } else {
                 continue;
             }
-
             if (k > params_.min_num_nodes) {
                 if (computeDistance(p_new, goal_) <= params_.goal_tolerance) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
+                    return true;}}}
+        return false;}
 
     int RRTPlanner::getNearestNodeId(const double *point) {
         double min_dist = std::numeric_limits<double>::max();
         int nearest_node_id = -1;
-
         for (size_t i = 0; i < nodes_.size(); ++i) {
             double dist = computeDistance(nodes_[i].pos, point);
             if (dist < min_dist) {
@@ -71,7 +54,6 @@ namespace rrt_planner {
         new_node.node_id = nodes_.size();  // Assign unique ID
         new_node.parent_id = parent_node_id;
         nodes_.emplace_back(new_node);  // Add the new node to the list
-
     }
 
     double* RRTPlanner::sampleRandomPoint() {
@@ -83,11 +65,9 @@ namespace rrt_planner {
     double* RRTPlanner::extendTree(const double* point_nearest, const double* point_rand) {
         double direction[2];
         double dist = computeDistance(point_nearest, point_rand);
-
         // Normalize direction and move a step size in that direction
         direction[0] = (point_rand[0] - point_nearest[0]) / dist;
         direction[1] = (point_rand[1] - point_nearest[1]) / dist;
-
         // Compute the new candidate point along the direction, with a fixed step size
         candidate_point_[0] = point_nearest[0] + params_.step * direction[0];
         candidate_point_[1] = point_nearest[1] + params_.step * direction[1];
