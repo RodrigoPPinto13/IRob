@@ -11,7 +11,8 @@ namespace rrt_planner {
 
     bool CollisionDetector::inFreeSpace(const double* world_pos) {
         unsigned int cell_x, cell_y;
-        bool within_bounds = costmap_->worldToMap(world_pos[0], world_pos[1], cell_x, cell_y);
+        bool within_bounds = costmap_->worldToMap
+            (world_pos[0], world_pos[1], cell_x, cell_y);
         if (!within_bounds) {
             return false;
         }
