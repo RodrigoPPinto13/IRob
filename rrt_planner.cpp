@@ -41,11 +41,8 @@ namespace rrt_planner {
             double dist = computeDistance(nodes_[i].pos, point);
             if (dist < min_dist) {
                 min_dist = dist;
-                nearest_node_id = i;
-            }
-        }
-        return nearest_node_id;
-    }
+                nearest_node_id = i;}}
+        return nearest_node_id;}
 
     void RRTPlanner::createNewNode(const double* pos, int parent_node_id) {
         Node new_node;
